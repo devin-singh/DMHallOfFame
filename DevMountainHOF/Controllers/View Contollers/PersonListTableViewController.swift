@@ -60,7 +60,14 @@ class PersonListTableViewController: UITableViewController {
                 !firstName.isEmpty, !lastName.isEmpty else { return }
             // Send Data to personController
             PersonController.postPerson(firstName: firstName, lastName: lastName) { (result) in
-                
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let person):
+                        self.people.append(person)
+                    case .failure(let error):
+                        self.presentErrorToUser(localizedError: error)
+                    }
+                }
             }
         }
         alert.addAction(saveAction)
@@ -87,12 +94,6 @@ class PersonListTableViewController: UITableViewController {
     // MARK: - Actions
     @IBAction func addButtonTapped(_ sender: UIBarButtonItem) {
         presentAlertController()
-        
-    }
-    
-    // MARK: - Navigation
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
     }
 }
